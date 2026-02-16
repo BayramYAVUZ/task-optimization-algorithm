@@ -1,0 +1,190 @@
+\usepackage{graphicx}
+\usepackage{nomencl}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{hyperref}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\usepackage{listings}
+\usepackage{xcolor}
+ 
+
+%
+%% MAKING ARRAYS
+%%  Ref: https://tex.stackexchange.com/questions/463902/indexing-variables
+%
+\usepackage{xparse}
+\usepackage{pgffor}
+
+\newcommand\makearray[1]{%
+    \expandafter\NewDocumentCommand\csname#1\endcsname{r[]g}{%
+        \IfValueTF{##2}{%
+            \expandafter\def\csname #1@##1\endcsname{##2}%
+        }{%
+            \csname #1@##1\endcsname
+        }%
+    }
+}
+
+
+% ============ Variables ============
+
+\def\thesistitle#1{\gdef\@thesistitle{#1}}
+
+\def\assignment#1{\gdef\@assignment{#1}}
+\def\course#1{\gdef\@course{#1}}
+\def\department#1{\gdef\@department{#1}}
+\def\submissiondate#1{\gdef\@submissiondate{#1}}
+\def\abstract#1{\gdef\@abstract{#1}}
+
+\makearray{authors}
+\makearray{authorsid}
+\makearray{supervisors}
+
+% ============ Variables ============
+
+
+
+% ============== Pages ==============
+
+% Title page
+\renewcommand{\maketitle}{
+    \pagenumbering{roman}
+    \thispagestyle{empty}
+    \begin{center}
+        \begin{figure*}
+            \centering
+            \includegraphics[width=.5\linewidth]{figures/LOGO.png}
+        \end{figure*}
+        \vspace*{.5in}
+        {\Large \textsc{\@thesistitle}} \\   
+        \vspace*{0.5in}
+        \textit{by} \\[1\baselineskip]
+        \foreach \i in {1,...,6} {
+            \ifcsname authors@\i\endcsname 
+                \textsc{\authors[\i], \authorsid[\i]} \par
+            \fi
+        }        
+        \vspace*{1in}
+        \makedissertation
+    \end{center}
+    \newpage
+}
+
+\newcommand{\makedissertation}{
+    {\small \textit{Submitted for the course} \\[1\baselineskip]
+    \@course \\[1\baselineskip]
+    \textit{for the assignment} \\[1\baselineskip]
+    \@assignment \\[1\baselineskip]
+    \vfill{}
+    \@submissiondate}
+}
+
+% Abstract page
+\renewcommand\abstractname{\textsc{Abstract}}
+\newcommand{\makeabstract}[1]{
+    \begin{center}
+        \large{\textbf{\textit{Abstract}}} \\[2\baselineskip]
+    \end{center} 
+    \textit{\@abstract}
+    \newpage
+}
+
+% Table of Contents
+\renewcommand\contentsname{\textsc{Table of Contents}}
+\newcommand\maketableofcontents{
+     \@afterindenttrue
+     \begin{center}
+        {\Large \textsc{\contentsname}}
+        \vskip21pt \vskip0.3\baselineskip
+      \end{center}
+    \@afterheading
+    \@starttoc{toc}%
+    \newpage
+}
+
+% List of Figures
+\renewcommand\figurename{Figure}
+\renewcommand\listoffigures{List of Figures}
+\newcommand\makelistoffigures{
+    \begin{center}
+        {\Large \sc \listoffigures}
+    \end{center}
+    \vskip\baselineskip
+    \@starttoc{lof}
+    \newpage
+}
+
+% List of Tables
+\renewcommand\tablename{Table}
+\renewcommand\listoftables{\textsc{List of Tables}}
+\newcommand\makelistoftables{
+    \begin{center}
+        {\Large \textsc{\listoftables}}
+    \end{center}
+    \vskip\baselineskip
+    \@starttoc{lot}
+    \newpage
+}
+
+
+% List of symbols
+\newlist{symbols}{itemize}{1}
+\setlist[symbols,1]{
+    label=,labelwidth=2in,align=parleft,itemsep=0.2\baselineskip,leftmargin=!
+}
+\newcommand\listofsymbols{\textsc{List of Symbols}}
+\newcommand\makelistofsymbols{
+    \begin{center}
+        {\Large \textsc{\listofsymbols}}
+    \end{center}
+    \vskip\baselineskip
+}
+
+% List of abbreviations
+\newlist{abbrv}{itemize}{1}
+\setlist[abbrv,1]{
+    label=,labelwidth=2in,align=parleft,itemsep=0.2\baselineskip,leftmargin=!
+}
+\newcommand\listofabbrv{\textsc{List of Abbreviations}}
+\newcommand\makelistofabbrv{
+    \begin{center}
+        {\Large \textsc{\listofabbrv}}
+    \end{center}
+    \vskip\baselineskip
+}
+
+% ============== Pages ==============
+
+%
+%% Algorithms
+% 
+\algdef{SE}[SUBALG]{Indent}{EndIndent}{}{\algorithmicend\ }%
+\algtext*{Indent}
+\algtext*{EndIndent}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.95}
+
+\renewcommand{\lstlistingname}{Code}
+\lstdefinestyle{custom_style}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    numberstyle=\scriptsize,
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,     
+    extendedchars=true,
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=7pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=custom_style}
